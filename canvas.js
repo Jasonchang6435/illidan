@@ -1,13 +1,13 @@
-class GuaCamera extends GuaObject {
+class YuanCamera extends YuanObject {
     constructor() {
         super()
-        this.position = GuaVector.new(0, 0, -10)
-        this.target = GuaVector.new(0, 0, 0)
-        this.up = GuaVector.new(0, 1, 0)
+        this.position = YuanVector.new(0, 0, -10)
+        this.target = YuanVector.new(0, 0, 0)
+        this.up = YuanVector.new(0, 1, 0)
     }
 }
 
-class GuaCanvas extends GuaObject {
+class YuanCanvas extends YuanObject {
     constructor(selector) {
         super()
         let canvas = _e(selector)
@@ -18,7 +18,7 @@ class GuaCanvas extends GuaObject {
         this.pixels = this.context.getImageData(0, 0, this.w, this.h)
         this.bytesPerPixel = 4
         // this.pixelBuffer = this.pixels.data
-        this.camera = GuaCamera.new()
+        this.camera = YuanCamera.new()
         this.depth = []
     }
     render() {
@@ -27,8 +27,8 @@ class GuaCanvas extends GuaObject {
         let {pixels, context} = this
         context.putImageData(pixels, 0, 0)
     }
-    clear(color=GuaColor.transparent()) {
-        // color GuaColor
+    clear(color=YuanColor.transparent()) {
+        // color YuanColor
         // 用 color 填充整个 canvas
         // 遍历每个像素点, 设置像素点的颜色
         let {w, h} = this
@@ -47,7 +47,7 @@ class GuaCanvas extends GuaObject {
         let i = (y * this.w + x) * this.bytesPerPixel
         // 设置像素
         let p = this.pixels.data
-        return GuaColor.new(p[i], p[i+1], p[i+2], p[i+3])
+        return YuanColor.new(p[i], p[i+1], p[i+2], p[i+3])
     }
     _less(a,b) {
         return b - a > 0.00000001
@@ -55,7 +55,7 @@ class GuaCanvas extends GuaObject {
     _setPixel(x, y, z, color) {
         let m = Math.floor(x)
         let n = Math.floor(y)
-        // color: GuaColor
+        // color: YuanColor
         // 这个函数用来设置像素点, _ 开头表示这是一个内部函数, 这是我们的约定
         // 浮点转 int
         let int = Math.round
@@ -82,8 +82,8 @@ class GuaCanvas extends GuaObject {
         // p[i+3] = int(a)
         p[i+3] = 255
     }
-    drawPoint(point, color=GuaColor.black()) {
-        // point: GuaPoint
+    drawPoint(point, color=YuanColor.black()) {
+        // point: YuanPoint
         let {w, h} = this
         let p = point
         if (p.x >= 0 && p.x <= w) {
@@ -92,9 +92,9 @@ class GuaCanvas extends GuaObject {
             }
         }
     }
-    drawLine(v1, v2, color=GuaColor.black()) {
+    drawLine(v1, v2, color=YuanColor.black()) {
         // v1 v2 分别是起点和终点
-        // color GuaColor
+        // color YuanColor
         // 使用 drawPoint 函数来画线
         let [x1, y1, x2, y2, z1, z2,] = [v1.x, v1.y, v2.x, v2.y, v1.z, v2.z]
         let dx = x2 - x1
@@ -110,7 +110,7 @@ class GuaCanvas extends GuaObject {
             for(let x = xmin; x < xmax; x++) {
                 let y = y1 + (x - x1) * ratio
                 let z = zmin + (x - x1) * dz
-                this.drawPoint(GuaVector.new(x, y, z), color)
+                this.drawPoint(YuanVector.new(x, y, z), color)
             }
         } else {
             let ymin = Math.min(y1, y2)
@@ -122,7 +122,7 @@ class GuaCanvas extends GuaObject {
             for(let y = ymin; y < ymax; y++) {
                 let x = x1 + (y - y1) * ratio
                 let z = zmin + (y - y1) * dz
-                this.drawPoint(GuaVector.new(x, y, z), color)
+                this.drawPoint(YuanVector.new(x, y, z), color)
             }
         }
     }
@@ -132,7 +132,7 @@ class GuaCanvas extends GuaObject {
         let y = a.position.y
         let x1 = a.position.x
         let x2 = b.position.x
-        // log(GuaMesh.pixels[19858])
+        // log(YuanMesh.pixels[19858])
         for (let x = x1; x <= x2; x++) {
             let factor = 0
             if (x2 != x1) {
@@ -142,12 +142,12 @@ class GuaCanvas extends GuaObject {
             let va =  a.v + (b.v - a.v) * factor
             let uvx = Math.floor(ua * 255)
             let uvy = Math.floor(va * 255)
-            let [r,g,cb,ca] = GuaMesh.pixels[uvy][uvx]
-            let color = GuaColor.new(r,g,cb,ca)
+            let [r,g,cb,ca] = YuanMesh.pixels[uvy][uvx]
+            let color = YuanColor.new(r,g,cb,ca)
             // let color = a.color.interpolate(b.color, factor)
 
             let z = a.position.z + (b.position.z - a.position.z) * factor
-            this.drawPoint(GuaVector.new(x, y, z), color)
+            this.drawPoint(YuanVector.new(x, y, z), color)
         }
     }
     drawTriangle(v1, v2, v3) {
@@ -190,9 +190,9 @@ class GuaCanvas extends GuaObject {
         let x = point.x * w2 + w2
         let y = - point.y * h2 + h2
 
-        let v = GuaVector.new(x, y, point.z)
+        let v = YuanVector.new(x, y, point.z)
         // 不插值
-        return GuaVertex.new(v, coordVector.color, coordVector.u, coordVector.v)
+        return YuanVertex.new(v, coordVector.color, coordVector.u, coordVector.v)
     }
     drawMesh(mesh) {
         let self = this
@@ -229,7 +229,7 @@ class GuaCanvas extends GuaObject {
                 let g = (((p >>> 16) * 2**16) - (r * 2**24))>>>16
                 let b = (((p >>> 8) * 2**8) - (r * 2**24) - (g * 2**16))>>>8
                 let a = p - (r * 2**24) - (g * 2**16) - (b * 2**8)
-                this._setPixel(j,i,1,GuaColor.new(r,g,b,a))
+                this._setPixel(j,i,1,YuanColor.new(r,g,b,a))
             }
         }
         this.render()

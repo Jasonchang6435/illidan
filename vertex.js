@@ -1,5 +1,5 @@
-class GuaVertex extends GuaObject {
-    // 表示顶点的类, 包含 GuaVector 和 GuaColor
+class YuanVertex extends YuanObject {
+    // 表示顶点的类, 包含 YuanVector 和 YuanColor
     // 表示了一个坐标和一个颜色
     constructor(position, color, u, v) {
         super()
@@ -15,6 +15,6 @@ class GuaVertex extends GuaObject {
         let c = a.color.interpolate(b.color, factor)
         let u = a.u + (b.u - a.u) * factor
         let v = a.v + (b.v - a.v) * factor
-        return GuaVertex.new(p, c, u, v)
+        return YuanVertex.new(p, c, u, v)
     }
 }
