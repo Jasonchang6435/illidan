@@ -1,29 +1,9 @@
-const fs = require('fs')
+const log = console.log.bind(console)
 
-//
-const formattedTime = () => {
-    const d = new Date()
-    // js 中 month 是从 0 开始计算
-    const month = d.getMonth() + 1
-    const date = d.getDate()
-    const hours = d.getHours()
-    const minutes = d.getMinutes()
-    const seconds = d.getSeconds()
-    const t = `${hours}:${minutes}:${seconds}`
-    return t
-}
+const _e = (sel) => document.querySelector(sel)
 
-// logs
-const log = (...args) => {
-    const t = formattedTime()
-    const arg = [t].concat(args)
-    console.log.apply(console, arg)
-    const content = t + ' ' + args + '\n'
-    fs.writeFileSync('log.txt', content, {
-        flag: 'a',
-    })
-}
+const _es = (sel) => document.querySelectorAll(sel)
 
-module.exports = {
-    log: log,
-}
+const interpolate = (a, b, factor) => a + (b - a) * factor
+
+const random01 = () => Math.random()
